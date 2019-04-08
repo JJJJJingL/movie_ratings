@@ -1,4 +1,4 @@
-
+import re
 from collections import defaultdict
 id_dict = defaultdict(list)
 id_to_rating = "/Users/ivywang/PycharmProjects/movie_final/title.ratings.tsv"
@@ -13,6 +13,7 @@ with open(id_to_attr, 'r') as attr:
         if fields[1] == 'movie' or fields[1] == 'short':
             title = fields[2].lower()
             title = "".join(title.split())
+            title = re.sub(r'[^\w\s]', '', title)
             id_dict[fields[0]].append(title) # append title
             # try to append year, if no year then do 0000
             if len(fields[5]) > 3 and fields[5] is not None:
