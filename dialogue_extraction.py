@@ -15,13 +15,15 @@ def get_filenames(folder_name):
     return fis
 
 def main(dialogues_folder):
-
+    dialogues = []
     the_ending = r'(.*)(the)\b'
     files_name = get_filenames(dialogues_folder)
     #print(files_name)
     dialogue_text = []
     dialogue_name = []
+    dialogue_genre = []
     for dir in files_name:
+        genre = dir.split('/')[-2]
         with open(dir, "r") as file:
             text = file.read()
             name = os.path.splitext(os.path.basename(dir))[0]
@@ -30,24 +32,34 @@ def main(dialogues_folder):
                 match_the = re.search(the_ending, name)
                 if match_the is not None:
                     name = re.sub(the_ending, r'\2\1', name)
+                dialogue_genre.append(genre)
                 dialogue_name.append(name)
                 dialogue_text.append(text)
+    script_frame = pd.DataFrame({'title': dialogue_name, 'genre': dialogue_genre, 'text': dialogue_text})
+    print(script_frame.iloc[[1]])
     #print(len(dialogue_text))
     #print(file_content[0])
     #print(dialogue_name[10])
 
     k = 0
-    movie_names = []
     movie_att_file = "movie_attributes.tsv"
-    match = []
     pd_list =[]
     with open(movie_att_file, "r") as movie_att:
         for line in movie_att:
-            line = [field for field in line.split('\t')]
+            line = [field for field in line.strip().split('\t')]
             pd_list.append(line)
-        print(pd_list[1])
-        movies = pd.DataFrame(pd_list)
-        print(movies)
+        print(pd_list[341298])
+        imdb_frame = pd.DataFrame(pd_list)
+        imdb_frame.columns = ['id','title','year', 'imdb_genre','rating','vote_num']
+        imdb_frame['rating'] = pd.to_numeric(imdb_frame['rating'])
+        print(imdb_frame)
+        imdb_frame.groupby(['title'])['rating'].mean()
+        #
+        # new_frame = imdb_frame.groupby(['title'])['rating'].mean()
+        # print(new_frame)
+    data_frame = pd.merge(script_frame, imdb_frame)
+    print(data_frame)
+
         # for line in movie_att:
         #     fields = line.strip().split('\t')
         #     movie_name = fields[1]
