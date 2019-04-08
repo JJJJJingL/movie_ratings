@@ -36,9 +36,8 @@ with open(id_to_rating, 'r') as rating:
     for line in rating:
         r_fields = line.strip().split('\t')
         if r_fields[0] in id_dict.keys():
-            id_dict[r_fields[0]].append(r_fields[1]) # rating
-            id_dict[r_fields[0]].append(r_fields[2]) # number of votes
-
+            id_dict[r_fields[0]].append(float(r_fields[1])) # rating
+            id_dict[r_fields[0]].append(int(r_fields[2])) # number of votes
 
 # remove from the ones that do not have ratings
 for i, j in list(id_dict.items()):
