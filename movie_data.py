@@ -10,20 +10,22 @@ with open(id_to_attr, 'r') as attr:
     next(attr)
     for line in attr:
         fields = line.strip().split('\t')
+        if fields[0] == 'tt0000001':
+            print(fields)
         if fields[1] == 'movie' or fields[1] == 'short':
             title = fields[2].lower()
             title = "".join(title.split())
             title = re.sub(r'[^\w\s]', '', title)
             id_dict[fields[0]].append(title) # append title
             # try to append year, if no year then do 0000
-            if len(fields[5]) > 3 and fields[5] is not None:
+            if len(fields[5]) > 3:
                 year = int(fields[5])
-            elif len(fields[6]) > 3 and fields[6] is not None:
+            elif len(fields[6]) > 3:
                 year = int(fields[6])
-            else:
-                year = 0
-            if year > 1950 or year == 0:
-                id_dict[fields[0]].append(year)
+            elif fields[5] == "\\N" and fields[6] == "\\N":
+                year = 1000
+            id_dict[fields[0]].append(year)
+            print(year)
             if fields[8] is not None:
                 id_dict[fields[0]].append(fields[8].lower()) # genre
 
