@@ -106,5 +106,17 @@ train_X, val_X, train_y, val_y = train_test_split(X, y, test_size=0.3)
 model = LinearRegression()
 fitted = model.fit(train_X, train_y)
 predicted = model.predict(val_X)
+
+# print(predicted)
+# print(val_y)
+
+# Round to integer
+pre = [round(x) for x in predicted]
+test_y = [round(x) for x in val_y]
+
+# correlation index
+print(np.corrcoef(pre, test_y))
+print(np.corrcoef(predicted, val_y))
+
 scored = model.score(val_X, val_y)
-print(scored)
+# print(scored)
