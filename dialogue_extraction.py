@@ -79,8 +79,11 @@ def main(dialogues_folder):
     script_file = "script_file.txt"
     with open(script_file, 'w') as out_script:
         for i, row in data_frame.iterrows():
-            out_script.write(row['text'])
-
+            text = row['text']
+            movie_name = row['title']
+            rating = row['rating']
+            text = text.replace('\n','')
+            out_script.write(f'{movie_name}\t{rating}\t{text}\n')
     #print(data_frame)
 
         # for line in movie_att:
