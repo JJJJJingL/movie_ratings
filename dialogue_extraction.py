@@ -48,16 +48,17 @@ def main(dialogues_folder):
         for line in movie_att:
             line = [field for field in line.strip().split('\t')]
             pd_list.append(line)
-        print(pd_list[341298])
+        #print(pd_list[341298])
         imdb_frame = pd.DataFrame(pd_list)
         imdb_frame.columns = ['id','title','year', 'imdb_genre','rating','vote_num']
         imdb_frame['rating'] = pd.to_numeric(imdb_frame['rating'])
-        print(imdb_frame)
+        #print(imdb_frame)
         imdb_frame.groupby(['title'])['rating'].mean()
-        #
         # new_frame = imdb_frame.groupby(['title'])['rating'].mean()
-        # print(new_frame)
-    data_frame = pd.merge(script_frame, imdb_frame)
+    #print(imdb_frame)
+    nou_frame = imdb_frame.sort_values('vote_num', ascending=False).drop_duplicates(['title'])
+    #print(nou_frame)
+    data_frame = pd.merge(script_frame, nou_frame)
     print(data_frame)
 
         # for line in movie_att:
