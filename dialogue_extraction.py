@@ -15,28 +15,38 @@ def get_filenames(folder_name):
     return fis
 
 def main(dialogues_folder):
-    dialogues = []
     the_ending = r'(.*)(the)\b'
     files_name = get_filenames(dialogues_folder)
-    #print(files_name)
     dialogue_text = []
-    dialogue_name = []
+    dialogue_pathname = []
     dialogue_genre = []
+    dialogue_name = []
     for dir in files_name:
+        #print(dir)
         genre = dir.split('/')[-2]
-        with open(dir, "r") as file:
-            text = file.read()
-            name = os.path.splitext(os.path.basename(dir))[0]
-            name = name.split("_")[0]
-            if name not in dialogue_name:
-                match_the = re.search(the_ending, name)
-                if match_the is not None:
-                    name = re.sub(the_ending, r'\2\1', name)
-                dialogue_genre.append(genre)
-                dialogue_name.append(name)
+        #path_name = dir.split('/')[-1]
+        name = os.path.splitext(os.path.basename(dir))[0]
+        name = name.split("_")[0]
+        if name not in dialogue_pathname:
+            dialogue_genre.append(genre)
+            dialogue_pathname.append(name)
+            with open(dir, "r") as file:
+                #print(f'unique {name}')
+                text = file.read()
                 dialogue_text.append(text)
+        else:
+            ind = dialogue_pathname.index(name)
+            dialogue_genre[ind] += f' {genre}'
+
+    for name in dialogue_pathname:
+        match_the = re.search(the_ending, name)
+        if match_the is not None:
+            name = re.sub(the_ending, r'\2\1', name)
+        dialogue_name.append(name)
+
     script_frame = pd.DataFrame({'title': dialogue_name, 'genre': dialogue_genre, 'text': dialogue_text})
-    print(script_frame.iloc[[1]])
+
+    #print(script_frame.iloc[[1]])
     #print(len(dialogue_text))
     #print(file_content[0])
     #print(dialogue_name[10])
@@ -56,10 +66,22 @@ def main(dialogues_folder):
         imdb_frame.groupby(['title'])['rating'].mean()
         # new_frame = imdb_frame.groupby(['title'])['rating'].mean()
     #print(imdb_frame)
+    #print(script_frame)
     nou_frame = imdb_frame.sort_values('vote_num', ascending=False).drop_duplicates(['title'])
+    #script_frame = script_frame.drop_duplicates(['title'])
     #print(nou_frame)
     data_frame = pd.merge(script_frame, nou_frame)
     print(data_frame)
+    #
+    # for i, row in data_frame.iterrows():
+    #     print(row['text'])
+
+    script_file = "script_file.txt"
+    with open(script_file, 'w') as out_script:
+        for i, row in data_frame.iterrows():
+            out_script.write(row['text'])
+
+    #print(data_frame)
 
         # for line in movie_att:
         #     fields = line.strip().split('\t')
