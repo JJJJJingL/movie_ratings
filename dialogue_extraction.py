@@ -82,9 +82,12 @@ def main(dialogues_folder):
             text = row['text']
             movie_name = row['title']
             rating = row['rating']
+            text = re.sub(r'[A-Z]+\n', '', text)
             text = text.replace('\n','')
+            if i == 0:
+                print(text)
             out_script.write(f'{movie_name}\t{rating}\t{text}\n')
-    #print(data_frame)
+    print(data_frame['text'][0])
 
         # for line in movie_att:
         #     fields = line.strip().split('\t')
