@@ -4,6 +4,7 @@ import re
 import pandas as pd
 
 def get_filenames(folder_name):
+    
     fis = []
     n = 0
     rootdir = os.walk(folder_name)
@@ -84,6 +85,7 @@ def main(dialogues_folder):
             rating = row['rating']
             text = re.sub(r'[A-Z]+\n', '', text)
             text = text.replace('\n','')
+            text = text.replace('\t', '')
             if i == 0:
                 print(text)
             out_script.write(f'{movie_name}\t{rating}\t{text}\n')
