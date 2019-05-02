@@ -3,6 +3,10 @@ import argparse
 import re
 import pandas as pd
 from collections import defaultdict
+from nltk import sent_tokenize
+import statistics
+import numpy as np
+
 
 def get_filenames(folder_name):
     """
@@ -92,8 +96,12 @@ def output_data_frame(data_frame, script_file):
         tsv: a tsv output file of script names, ratings and texts
     """
     with open(script_file, 'w') as out_script:
+        sent_lengths = []
         for i, row in data_frame.iterrows():
             text = row['text']
+            sents = sent_tokenize(text)
+            for sent in sents:
+                sent_lengths.append(len(sent))
             movie_name = row['title']
             rating = row['rating']
             text = re.sub(r'[A-Z]+\n', ' ', text)
@@ -101,6 +109,9 @@ def output_data_frame(data_frame, script_file):
             text = text.replace('\n',' ')
             text = text.replace('\t', ' ')
             out_script.write(f'{movie_name}\t{rating}\t{text}\n')
+        higher, lower = np.percentile(sent_lengths, [75, 25])
+        print(f'lower 25: {lower}\nhigher 25: {higher}\nmedian: {statistics.median(sent_lengths)}\n')
+        print(f'total movies: {i}')
 
 def output_movie_attributes(id_to_rating, id_to_attr, output_file):
     """
