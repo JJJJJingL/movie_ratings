@@ -83,39 +83,36 @@ def add_pos_tag(script):
 
     return percentage_n, percentage_adj, percentage_v
 
-
-# make vector
-# read cleaned data into list
-with open('script_file.txt', 'r') as scripts_file:
-    script_list = []
-    rating_list = []
-    file = scripts_file.readlines()
-    for line in file:
-        fields = line.split('\t')
-        # print(fields[0])
-        script_list.append(fields[2])  # script list is the script
-        rating_list.append(float(fields[1]))
-
-# Feature1: create a list of mean of number of words in each sentence (np
-# Due to the punctuation variation of original scripts, we need to exclude the mean > 100
-
 mean_list = []
 baseline_list = []
 percentage_n_list = []
 percentage_a_list = []
 percentage_v_list = []
+script_list = []
+rating_list = []
+# make vector
+# read cleaned data into list
+with open('script_file.txt', 'r') as scripts_file:
+    file = scripts_file.readlines()
+    for line in file:
+        fields = line.split('\t')
+        rating_list.append(float(fields[1]))
+        script = fields[2]
+        script_list.append(script)  # script list is the script
+        temp_n, temp_a, temp_v = add_pos_tag(script)
+        percentage_n_list.append(temp_n)
+        percentage_a_list.append(temp_a)
+        percentage_v_list.append(temp_v)
+        baseline_list.append(number_sent)
+        utterances, mean, number_sent = mean_words_per_sentence(script)
+        if mean < 50:
+            mean_list.append(mean)
+        else:
+            mean_list.append(0)
 
-for one_script in script_list:
-    utterances, mean, number_sent = mean_words_per_sentence(one_script)
-    if mean < 50:
-        mean_list.append(mean)
-    else:
-        mean_list.append(0)
-    temp_n, temp_a, temp_v = add_pos_tag(one_script)
-    percentage_n_list.append(temp_n)
-    percentage_a_list.append(temp_a)
-    percentage_v_list.append(temp_v)
-    baseline_list.append(number_sent)
+
+# Due to the punctuation variation of original scripts, we need to exclude the mean > 100, and correspondingly, get rid of these items in all of the other feature list
+# 890-> 824
 
 
 script_list_stripped = [script for i, script in enumerate(script_list) if mean_list[i] is not 0] # 824
@@ -134,7 +131,7 @@ vectorizer = TfidfVectorizer("content", lowercase=True, analyzer="word", use_idf
 vectorizer.fit(script_list_stripped)
 tfidf_list = []
 # X_tfidf = np.asarray(tfidf_list)
-for i, script in enumerate(script_list_stripped):
+for script in script_list_stripped:
     script_vector = vectorizer.transform([script])
     tfidf = script_vector.toarray()
     tfidf_list.append(tfidf)
@@ -143,7 +140,7 @@ X_tfidf = np.vstack(tfidf_list)
 print(X_tfidf.shape)
 print(X_mean.shape)
 
-X = np.column_stack((X_mean, X_tfidf))
+X_tfidf_mean = np.column_stack((X_mean, X_tfidf))
 
 y = np.asarray(rating_list_stripped)
 y = y.reshape(-1,1)
@@ -153,12 +150,13 @@ print(y.shape)
 # baseline: number of sentences
 X_base = np.asarray(baseline_list_stripped).reshape(-1, 1)
 print(X_base.shape)
-X_all = np.column_stack((X_mean, X_tfidf, X_base))
-X_mean_base = np.column_stack((X_mean, X_base))
-#
-# # baseline model fitting
-#
-# train_X, val_X, train_y, val_y = train_test_split(X_base, y, test_size=0.3)
+X_pos_a = np.asarray(percentage_a_list_str)
+X_pos_n = np.asarray(percentage_n_list_str)
+X_pos_v = np.asarray(percentage_v_list_str)
+X_all = np.column_stack((X_mean, X_tfidf, X_pos_v, X_pos_a, X_pos_n))
+X_pos = np.column_stack((X_pos_a, X_pos_n, X_pos_v))
+
+# baseline model fitting
 # model = RandomForestRegressor(n_estimators=10, random_state=42)
 # fitted = model.fit(train_X, train_y)
 # predicted = model.predict(val_X)
@@ -175,8 +173,6 @@ X_mean_base = np.column_stack((X_mean, X_base))
 
 # tdidf model fitting
 
-train_X, test_X, train_y, test_y = train_test_split(X_tfidf, y, test_size=0.2)
-train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.2)
 
 # # make model
 # model = RandomForestRegressor(n_estimators=10, random_state=42)
@@ -194,8 +190,9 @@ train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.
 # print('Model with tfidf accuracy:', round(accuracy, 2), '%.')
 #
 # # mean of length per sentence model fitting
-#
-# train_X, val_X, train_y, val_y = train_test_split(X_mean, y, test_size=0.3)
+# train_X, test_X, train_y, test_y = train_test_split(X_mean, y, test_size=0.2)
+# train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.2)
+
 # model = RandomForestRegressor(n_estimators=1000, random_state=42)
 # fitted = model.fit(train_X, train_y)
 # predicted = model.predict(val_X)
@@ -212,7 +209,6 @@ train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.
 #
 # # baseline with two features (tfidf + mean of the length per sentence) model fitting
 #
-# train_X, val_X, train_y, val_y = train_test_split(X, y, test_size=0.3)
 # model = RandomForestRegressor(n_estimators=10, random_state=42)
 # fitted = model.fit(train_X, train_y)
 # predicted = model.predict(val_X)
@@ -227,28 +223,55 @@ train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.
 # accuracy = 100 - np.mean(mape)
 # print('tfidf+ mean words per sentence accuracy:', round(accuracy, 2), '%.')
 #
-# #
-#
-# train_X, val_X, train_y, val_y = train_test_split(X_mean_base, y, test_size=0.3)
-# model = RandomForestRegressor(n_estimators=10, random_state=42)
-# fitted = model.fit(train_X, train_y)
-# predicted = model.predict(val_X)
-#
-# # print(predicted)
-# error = abs(predicted - val_y)
-# print(round(np.mean(error), 2))
-#
-# # Calculate mean absolute percentage error (MAPE)
-# mape = 100 * (error / val_y)
-# # Calculate and display accuracy
-# accuracy = 100 - np.mean(mape)
-# print('mean words + number of sentences accuracy:', round(accuracy, 2), '%.')
+
+train_X_tfidf_mean, test_X_tfidf_mean, train_y, test_y = train_test_split(X_tfidf_mean, y, test_size=0.2)
+train_X_tfidf_mean, val_X_tfidf_mean, train_y, val_y = train_test_split(train_X_tfidf_mean, train_y, test_size=0.2)
+
+train_X_all, test_X_all, train_y, test_y = train_test_split(X_all, y, test_size=0.2)
+train_X_all, val_X_all, train_y, val_y = train_test_split(train_X_all, train_y, test_size=0.2)
+
+train_X_pos, test_X_pos, train_y, test_y = train_test_split(X_pos, y, test_size=0.2)
+train_X_pos, val_X_pos, train_y, val_y = train_test_split(train_X_pos, train_y, test_size=0.2)
+
+train_X_tfidf, test_X_tfidf, train_y, test_y = train_test_split(X_tfidf, y, test_size=0.2)
+train_X_tfidf, val_X_tfidf, train_y, val_y = train_test_split(train_X_tfidf, train_y, test_size=0.2)
+
+train_X_mean, test_X_mean, train_y, test_y = train_test_split(X_mean, y, test_size=0.2)
+train_X_mean, val_X_mean, train_y, val_y = train_test_split(train_X_mean, train_y, test_size=0.2)
+
+
+train_X_base, test_X_base, train_y, test_y = train_test_split(X_base, y, test_size=0.2)
+train_X_base, val_X_base, train_y, val_y = train_test_split(train_X_base, train_y, test_size=0.2)
+
+def random_forest(train_X, train_y, val_X, val_y):
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(train_X, train_y)
+    predicted = model.predict(val_X).reshape(-1,1)
+    # print(predicted)
+    error = abs(predicted - val_y)
+    # print(round(np.mean(error), 2))
+    # Calculate mean absolute percentage error (MAPE)
+    mape = 100 * (error / val_y)
+    # Calculate and display accuracy
+    accuracy = 100 - np.mean(mape)
+    print('mean words + number of sentences accuracy:', round(accuracy, 5), '%.')
+    forest_corr, p_value = pearsonr(predicted, val_y)
+    print(forest_corr)
+    return accuracy, forest_corr
 
 # linear regression
-model_linear = LinearRegression()
-model_linear.fit(train_X, train_y)
-predicted_linear = model_linear.predict(val_X)
+def linear_model(train_X, train_y, val_X, val_y):
+    model_linear_mean = LinearRegression()
+    model_linear_mean.fit(train_X, train_y)
+    predicted_linear = model_linear_mean.predict(val_X)
+    score_linear = model_linear_mean.score(val_X, val_y)
+    print(score_linear)
+    correlation_linear, p_value = pearsonr(predicted_linear, val_y)
+    print(correlation_linear)
+    return score_linear, correlation_linear
 
-# Pearsons correlations
-correlation, p_value = pearsonr(predicted, y)
-print(correlation)
+linear_model_score, pearson_corr = linear_model(train_X_all, train_y, val_X_all, val_y)
+# accuracy score: -0.18 TFIDF, 0.0025 baseline, -0.01028 mean
+# pearson corr: [0.15177801] base, 0.15341161 tfidf, 0.0351 mean,
+
+forest_accuracy, forest_corr = random_forest(train_X_all, train_y, val_X_all, val_y)
