@@ -27,8 +27,7 @@ There are five command arguments possible:
 
 Example usage:
 
-    'python data_.py -d dialogs -r title.ratings.tsv -a title.basics.tsv 
-    -ao movie_attributes.tsv -dfo script_file.txt 
+    'python data_.py -d dialogs -r title.ratings.tsv -a title.basics.tsv -ao movie_attributes.tsv -dfo script_file.txt 
     
     
 
