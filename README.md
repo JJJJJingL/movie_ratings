@@ -8,7 +8,7 @@ these textual information could be used to predict movie ratings.
 We used two datasets for this project, one of the screenplay texts and the other of 
 user rating, among other movie metadata. 
 
-IMDB API files: ???
+IMDB API files: https://datasets.imdbws.com
 
 Film Corpus 2.0: https://nlds.soe.ucsc.edu/fc2
 
@@ -27,10 +27,8 @@ There are five command arguments possible:
 
 Example usage:
 
-    python data_.py -d dialogs -r title.ratings.tsv -a title.basics.tsv -ao movie_attributes.tsv -dfo script_file.txt 
-    
+    python data_.py -d dialogs -r title.ratings.tsv 
     
 
-`
 
 ## train_data.py
