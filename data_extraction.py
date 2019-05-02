@@ -178,19 +178,19 @@ def main(dialogues_folder, id_to_rating_file, id_to_attr_file, movie_attr_output
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dialogues_file", type=str,
+    parser.add_argument("-d", "--dialogues_file", type=str,
                         default="../imsdb_scenes_dialogs_nov_2015/dialogs",
                         help="wnut tsv file including annotations")
-    parser.add_argument("--id_to_rating_file", type=str,
+    parser.add_argument("-r", "--id_to_rating_file", type=str,
                         default="../title.ratings.tsv",
                         help="tsv file of id and rating")
-    parser.add_argument("--id_to_attr_file", type=str,
+    parser.add_argument("-a", "--id_to_attr_file", type=str,
                         default="../title.basics.tsv",
                         help="tsv file of id and attributes")
-    parser.add_argument("--attributes_output", type=str,
+    parser.add_argument("-ao", "--attributes_output", type=str,
                         default="movie_attributes.tsv",
                         help="output file of all attributes")
-    parser.add_argument("--data_frame_output", type=str,
+    parser.add_argument("-dfo", "--data_frame_output", type=str,
                         default="script_file.txt",
                         help="output file of data frame")
 
