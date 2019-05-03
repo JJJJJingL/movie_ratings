@@ -19,6 +19,7 @@ Film Corpus 2.0: https://nlds.soe.ucsc.edu/fc2
 There are two python files in this project
 - data_extraction.py 
 - train_data.py
+
 And two output files of processed datasets 
 - movie_attributes.tsv
 - script_file.tsv
@@ -30,7 +31,7 @@ It takes around 30 minutes to run the entire project.
 This code extracts movie scripts and ratings from the IMDB API files and movie script files. 
 The output is a tsv file of movie names, movie rating and movie scripts. 
 
-There are five command line arguments possible: 
+There are five command lines arguments possible: 
 
 * -d --dialogues_file: folder of movie script files. 
 * -r --id_to_rating_file: IMDB API tsv file containing movie IDs, ratings and number of votes.
@@ -57,14 +58,15 @@ and then based on each script, engineers desired features.
 - TFIDF vector (fitted for sparsity)
 - percentages of nouns, verbs, and adjectives
 
-To engineer these features we first obtain relevant data into lists, then, after filtering out the items that contain over 50 mean words per sentence (outliers), we transform the lists into numpy arrays. 
+To engineer these features we first obtain relevant data into lists, then, after filtering out the items that contain over 50 of the number of mean words per sentence (outliers), we transform the lists into numpy arrays. 
 
-For each individual/combined feature, we split the dataset into train, validation, and test, then we trained each feature on both linear regression model and Random Forest Regression model. We evaluated the models on validation data. 
+For each individual/combined feature, we split the dataset into training, validation, and test. Then we trained each feature  and feature combinations on both linear regression model and Random Forest Regression model. We evaluated the models on validation data. 
 Our last results were generated on the baseline feature and the TFIDF-Mean words feature, for the test dataset.
 
 Example usage: 
 
     python train_data.py -f script_file.txt
+    
 ## Output File
 
 ### movie_attributes.tsv
