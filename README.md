@@ -1,4 +1,6 @@
 # Predicting IMDB public rating from screenplays
+Author: Ivy Wang, Siyu Liang, Jingjing Lin
+## Objective 
 
 In this project, we are interested in examining the screenplay in films, and whether 
 these textual information could be used to predict movie ratings. 
