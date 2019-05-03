@@ -14,7 +14,8 @@ IMDB API files: https://datasets.imdbws.com
 
 Film Corpus 2.0: https://nlds.soe.ucsc.edu/fc2
 
-## data_extraction.py
+## Code Instruction
+### data_extraction.py
 
 This code extracts movie scripts and ratings from the IMDB API files and movie script files. 
 The output is a tsv file of movie names, movie rating and movie scripts. 
@@ -31,16 +32,16 @@ Example usage:
 
     python data_extraction.py -d dialogs -r title.ratings.tsv 
     
+-----
 
-
-## train_data.py
+### train_data.py
 
 This Python script is intended to be used after the dataset between film scripts and IMDb 
 ratings has been incorporated and cleaned. The code takes the input file, extracts the 
 script and the rating. It first puts the ratings into a list of gold standard labels, 
 and then based on each script, engineers desired features. 
 
-### features include:
+#### features include:
 - number of sentences (baseline)
 - mean words per sentence (average sentence length)
 - TFIDF vector (fitted for sparsity)
@@ -54,12 +55,13 @@ Our last results were generated on the baseline feature and the TFIDF-Mean words
 Example usage: 
 
     python train_data.py -f script_file.txt
+## Output File
 
-## movie_attributes.tsv
+### movie_attributes.tsv
 
 Output file of data_extraction.py; contains IMDb ID, movie name, production year, genre, rating 
 and number of votes. 
 
-## script_file.tsv
+### script_file.tsv
 
 Output file of data_extraction.py; contains movie name, rating and movie script.
