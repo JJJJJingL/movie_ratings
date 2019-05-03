@@ -51,4 +51,4 @@ Our last results were generated on the baseline feature and the TFIDF-Mean words
 
 Example usage: 
 
-    `python train_data.py -f script_file.txt`
+    python train_data.py -f script_file.txt
