@@ -157,8 +157,8 @@ def main(script_file):
             percentage_n_list.append(temp_n)
             percentage_a_list.append(temp_a)
             percentage_v_list.append(temp_v)
-            baseline_list.append(number_sent)
             utterances, mean, number_sent = mean_words_per_sentence(script)
+            baseline_list.append(number_sent)
             if mean < 50:
                 mean_list.append(mean)
             else:
@@ -178,13 +178,13 @@ def main(script_file):
     # make the above lists into numpy arrays and reshape
     # baseline array:
     X_base = np.asarray(baseline_list_stripped).reshape(-1, 1)
-    print(f'the array shape of baseline feature is: {X_base.shape}')
+    # print(f'the array shape of baseline feature is: {X_base.shape}')
 
     # mean words per sentence numpy array
     mean_array = np.asarray(mean_list_stripped)
     X_mean = mean_array.reshape(-1, 1)
     X_mean = X_mean.reshape(-1, 1)
-    print(f'the array shape of mean-words-per-sentence feature is: {X_mean.shape}')
+    # print(f'the array shape of mean-words-per-sentence feature is: {X_mean.shape}')
 
     # TFIDF vector --> numpy array
     vectorizer = TfidfVectorizer("content", lowercase=True, analyzer="word", use_idf=True, min_df=10)
@@ -196,7 +196,7 @@ def main(script_file):
         tfidf_list.append(tfidf)
         # print(tfidf)
     X_tfidf = np.vstack(tfidf_list)
-    print(f'the array shape of TFIDF feature is: {X_tfidf.shape}')
+    # print(f'the array shape of TFIDF feature is: {X_tfidf.shape}')
 
     # make TFIDF and mean-words-per-sentence combined matrix:
     X_tfidf_mean = np.column_stack((X_mean, X_tfidf))
@@ -204,18 +204,18 @@ def main(script_file):
     # make labels numpy array
     y = np.asarray(rating_list_stripped)
     y = y.reshape(-1, 1)
-    print(f'the array shape of label is:{y.shape}')
+    # print(f'the array shape of label is:{y.shape}')
 
     # make part of speech percentage arrays, individual and combined
     X_pos_a = np.asarray(percentage_a_list_str)
     X_pos_n = np.asarray(percentage_n_list_str)
     X_pos_v = np.asarray(percentage_v_list_str)
     X_pos = np.column_stack((X_pos_a, X_pos_n, X_pos_v))
-    print(f'the array shape of POS tag features is:{X_pos.shape}')
+    # print(f'the array shape of POS tag features is:{X_pos.shape}')
 
     # make the combined matrix containing mean-words-per-sentence, percentage of lexical items, and TFIDF:
     X_all = np.column_stack((X_mean, X_tfidf, X_pos_v, X_pos_a, X_pos_n))
-    print(f'the array shape of combined TFIDF, mean-words-per-sent, and POS tags feature is:{X_all.shape}')
+    # print(f'the array shape of combined TFIDF, mean-words-per-sent, and POS tags feature is:{X_all.shape}')
 
     # create lists for Dataframe
     linear_score_list = []
@@ -272,8 +272,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process cleaned data file')
 
-    parser.add_argument('-f','--file', dest='script_file',
-                        help='cleaned datafile')
+    parser.add_argument('-f', '--file', help='cleaned datafile')
 
     args = parser.parse_args()
     main(args.file)
