@@ -5,7 +5,7 @@ Authors: Ivy Wang, Siyu Liang, Jingjing Lin
 In this project, we are interested in examining the screenplay in films, and whether 
 these textual information could be used to predict movie ratings. 
 
-## Dataset
+## Datasets
 
 We used two datasets for this project, one of the screenplay texts and the other of 
 user rating, among other movie metadata. 
@@ -52,7 +52,7 @@ ratings has been incorporated and cleaned. The code takes the input file, extrac
 script and the rating. It first puts the ratings into a list of gold standard labels, 
 and then based on each script, engineers desired features. 
 
-#### features include:
+#### Features include:
 - number of sentences (baseline)
 - mean words per sentence (average sentence length)
 - TFIDF vector (fitted for sparsity)
@@ -67,7 +67,7 @@ Example usage:
 
     python train_data.py -f script_file.txt
     
-## Output File
+## Output Files
 
 ### movie_attributes.tsv
 
