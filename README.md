@@ -17,7 +17,7 @@ Film Corpus 2.0: https://nlds.soe.ucsc.edu/fc2
 This code extracts movie scripts and ratings from the IMDB API files and movie script files. 
 The output is a tsv file of movie names, movie rating and movie scripts. 
 
-There are five command arguments possible: 
+There are five command line arguments possible: 
 
 * -d --dialogues_file: folder of movie script files. 
 * -r --id_to_rating_file: IMDB API tsv file containing movie IDs, ratings and number of votes.
@@ -27,14 +27,18 @@ There are five command arguments possible:
 
 Example usage:
 
-    python data_.py -d dialogs -r title.ratings.tsv 
+    python data_extraction.py -d dialogs -r title.ratings.tsv 
     
 
 
 ## train_data.py
 
-This Python script is intended to be used after the dataset between film scripts and IMDb ratings has been incorporated and cleaned. The code takes the input file, extracts the script and the rating. It first puts the ratings into a list of gold standard labels, and then based on each script, engineers desired features. 
-## features include:
+This Python script is intended to be used after the dataset between film scripts and IMDb 
+ratings has been incorporated and cleaned. The code takes the input file, extracts the 
+script and the rating. It first puts the ratings into a list of gold standard labels, 
+and then based on each script, engineers desired features. 
+
+### features include:
 - number of sentences (baseline)
 - mean words per sentence (average sentence length)
 - TFIDF vector (fitted for sparsity)
@@ -46,4 +50,5 @@ For each individual/combined feature, we split the dataset into train, validatio
 Our last results were generated on the baseline feature and the TFIDF-Mean words feature, for the test dataset.
 
 Example usage: 
+
     `python train_data.py -f script_file.txt`
