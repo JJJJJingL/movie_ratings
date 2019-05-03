@@ -15,6 +15,16 @@ IMDB API files: https://datasets.imdbws.com
 Film Corpus 2.0: https://nlds.soe.ucsc.edu/fc2
 
 ## Code Instruction
+
+There are two python files in this project
+- data_extraction.py 
+- train_data.py
+And two output files of processed datasets 
+- movie_attributes.tsv
+- script_file.tsv
+
+It takes around 30 minutes to run the entire project.
+
 ### data_extraction.py
 
 This code extracts movie scripts and ratings from the IMDB API files and movie script files. 
