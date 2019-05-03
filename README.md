@@ -32,3 +32,18 @@ Example usage:
 
 
 ## train_data.py
+
+This Python script is intended to be used after the dataset between film scripts and IMDb ratings has been incorporated and cleaned. The code takes the input file, extracts the script and the rating. It first puts the ratings into a list of gold standard labels, and then based on each script, engineers desired features. 
+## features include:
+- number of sentences (baseline)
+- mean words per sentence (average sentence length)
+- TFIDF vector (fitted for sparsity)
+- percentages of nouns, verbs, and adjectives
+
+To engineer these features we first obtain relevant data into lists, then, after filtering out the items that contain over 50 mean words per sentence (outliers), we transform the lists into numpy arrays. 
+
+For each individual/combined feature, we split the dataset into train, validation, and test, then we trained each feature on both linear regression model and Random Forest Regression model. We evaluated the models on validation data. 
+Our last results were generated on the baseline feature and the TFIDF-Mean words feature, for the test dataset.
+
+Example usage: 
+    python train_data.py -f script_file.txt
