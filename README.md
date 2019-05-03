@@ -46,4 +46,4 @@ For each individual/combined feature, we split the dataset into train, validatio
 Our last results were generated on the baseline feature and the TFIDF-Mean words feature, for the test dataset.
 
 Example usage: 
-    python train_data.py -f script_file.txt
+    > python train_data.py -f script_file.txt
