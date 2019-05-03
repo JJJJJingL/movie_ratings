@@ -52,3 +52,12 @@ Our last results were generated on the baseline feature and the TFIDF-Mean words
 Example usage: 
 
     python train_data.py -f script_file.txt
+
+## movie_attributes.tsv
+
+Output file of data_extraction.py; contains IMDb ID, movie name, production year, genre, rating 
+and number of votes. 
+
+## script_file.tsv
+
+Output file of data_extraction.py; contains movie name, rating and movie script.
