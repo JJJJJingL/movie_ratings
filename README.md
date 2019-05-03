@@ -1,4 +1,4 @@
-# Predicting IMDB public rating from screenplays
+# Predicting IMDb Rating From Movie Scripts
 Authors: Ivy Wang, Siyu Liang, Jingjing Lin
 ## Objective 
 
