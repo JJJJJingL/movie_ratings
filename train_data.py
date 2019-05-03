@@ -84,11 +84,26 @@ def add_pos_tag(script):
 
 # split datasets
 def data_split(X, y):
+    """
+
+    :param X: feature matrix numpy array
+    :param y: label numpy array
+    :return: train_X, train_y, test_X, test_y, val_X, val_y
+    """
     train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.2, random_state = 42)
     train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.2, random_state = 42)
     return train_X, train_y, test_X, test_y, val_X, val_y
 
 def random_forest(train_X, train_y, val_X, val_y):
+    """
+
+    :param train_X: training feature matrix
+    :param train_y: training labels
+    :param val_X: validation/test feature matrix
+    :param val_y: validation/test labels
+    :return: Random Forest model self-reported accuracy, Pearson correlation coefficient
+    between the predicted and the gold standard
+    """
     model = RandomForestRegressor(n_estimators=100, random_state=42)
     model.fit(train_X, train_y)
     predicted = model.predict(val_X).reshape(-1,1)
@@ -106,6 +121,15 @@ def random_forest(train_X, train_y, val_X, val_y):
 
 # linear regression
 def linear_model(train_X, train_y, val_X, val_y):
+    """
+
+    :param train_X: training feature matrix
+    :param train_y: training labels
+    :param val_X: validation/test feature matrix
+    :param val_y: validation/test labels
+    :return: linear model self-reported accuracy, Pearson correlation coefficient
+    between the predicted and the gold standard
+    """
     model_linear_mean = LinearRegression()
     model_linear_mean.fit(train_X, train_y)
     predicted_linear = model_linear_mean.predict(val_X)
@@ -224,7 +248,6 @@ def main(script_file):
                'forest correlation': forest_corr_list}
     df = pd.DataFrame.from_dict(df_dict)
     df['forest accuracy']= round(df['forest accuracy'] / 100, 3)
-
     print(df)
 
     # final eval on test dataset
