@@ -97,6 +97,7 @@ def output_data_frame(data_frame, script_file):
     """
     with open(script_file, 'w') as out_script:
         sent_lengths = []
+        rate_list = []
         for i, row in data_frame.iterrows():
             text = row['text']
             sents = sent_tokenize(text)
@@ -104,14 +105,23 @@ def output_data_frame(data_frame, script_file):
                 sent_lengths.append(len(sent))
             movie_name = row['title']
             rating = row['rating']
+            rate_list.append(rating)
             text = re.sub(r'[A-Z]+\n', ' ', text)
             text = re.sub(r'--+', ' ', text)
             text = text.replace('\n',' ')
             text = text.replace('\t', ' ')
             out_script.write(f'{movie_name}\t{rating}\t{text}\n')
-        higher, lower = np.percentile(sent_lengths, [75, 25])
-        print(f'lower 25: {lower}\nhigher 25: {higher}\nmedian: {statistics.median(sent_lengths)}\n')
-        print(f'total movies: {i}')
+        # higher, lower = np.percentile(sent_lengths, [75, 25])
+        # print(f'lower 25: {lower}\nhigher 25: {higher}\nmedian: {statistics.median(sent_lengths)}\n')
+        # print(f'total sents: {len(sent_lengths)} total movies: {i}')
+        # one_two = [rate for rate in rate_list if rate <= 2]
+        # three_four = [rate for rate in rate_list if rate >2 and rate <= 4]
+        # five_six = [rate for rate in rate_list if rate >4 and rate <= 6 ]
+        # seven_eight = [rate for rate in rate_list if rate > 6 and rate <= 8]
+        # nine_ten = [rate for rate in rate_list if rate > 8]
+        # print(len(one_two), len(three_four), len(five_six), len(seven_eight), len(nine_ten))
+        # print(len(one_two)/len(rate_list), len(three_four)/len(rate_list), len(five_six)/len(rate_list),
+        #       len(seven_eight)/len(rate_list), len(nine_ten)/len(rate_list))
 
 def output_movie_attributes(id_to_rating, id_to_attr, output_file):
     """
