@@ -8,6 +8,7 @@ import statistics
 import numpy as np
 
 
+# get all movie names
 def get_filenames(folder_name):
     """
     Args:
@@ -26,6 +27,7 @@ def get_filenames(folder_name):
                 fis.append(os.path.join(root, name))
     return fis
 
+# Matching scirpts and their names into one list
 def get_script_frame(folder):
     """
     Args:
@@ -64,6 +66,8 @@ def get_script_frame(folder):
 
     return script_frame
 
+
+# Merging processed IMDb datasets and Movie Scripts datasets into ad hoc data
 def get_data_frame(script_frame, movie_att_file):
     """
     Args:
@@ -86,6 +90,7 @@ def get_data_frame(script_frame, movie_att_file):
     data_frame = pd.merge(script_frame, nou_frame)
     return data_frame
 
+# Fliter necessary columns/attributes to generate output file
 def output_data_frame(data_frame, script_file):
     """
     Args:
@@ -108,7 +113,7 @@ def output_data_frame(data_frame, script_file):
             text = text.replace('\t', ' ')
             out_script.write(f'{movie_name}\t{rating}\t{text}\n')
 
-
+# Process all attributes from IMDb datasets then output
 def output_movie_attributes(id_to_rating, id_to_attr, output_file):
     """
     Args:
