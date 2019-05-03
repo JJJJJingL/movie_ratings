@@ -26,6 +26,8 @@ And two output files of processed datasets
 
 It takes around 30 minutes to run the entire project.
 
+-------------
+
 ### data_extraction.py
 
 This code extracts movie scripts and ratings from the IMDB API files and movie script files. 
