@@ -1,5 +1,5 @@
 # Predicting IMDB public rating from screenplays
-Author: Ivy Wang, Siyu Liang, Jingjing Lin
+Authors: Ivy Wang, Siyu Liang, Jingjing Lin
 ## Objective 
 
 In this project, we are interested in examining the screenplay in films, and whether 
