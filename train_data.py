@@ -223,6 +223,8 @@ def main(script_file):
                'forest accuracy': forest_score_list,
                'forest correlation': forest_corr_list}
     df = pd.DataFrame.from_dict(df_dict)
+    df['forest accuracy']= round(df['forest accuracy'] / 100, 3)
+
     print(df)
 
     # final eval on test dataset
@@ -247,13 +249,15 @@ def main(script_file):
                     'forest accuracy': forest_score_test,
                     'forest correlation': forest_corr_test}
     df_test = pd.DataFrame.from_dict(df_dict_test)
+    df_test['forest accuracy']= round(df_test['forest accuracy'] / 100, 3)
+
     print(df_test)
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process cleaned data file')
 
-    parser.add_argument('-f', '--file', help='cleaned datafile')
+    parser.add_argument('-f', '--file', default='script_file.txt', help='cleaned datafile')
 
     args = parser.parse_args()
     main(args.file)
