@@ -13,7 +13,7 @@ from scipy.stats import pearsonr
 import pandas as pd
 import argparse
 
-
+# preprocess datasets
 def preprocess(text, lower=False):
     """ preprocessed the text, lowering as optional, otherwise stem, and takes away stopwords"""
     tokens = word_tokenize(text)
@@ -27,7 +27,7 @@ def preprocess(text, lower=False):
     return " ".join(tokens_nostop)
 
 
-# this function
+# this function aims to calculate word counts
 def word_count_all(list):
     """makes a dictionary of all words in script, value is the word count"""
     all_word_count = {}
@@ -40,9 +40,9 @@ def word_count_all(list):
         all_word_count[word] = all_word_count.get(word, 0) + 1
     return all_word_count
 
-
+# this function aims to calculate the mean number of words in each sentence
 def mean_words_per_sentence(script):
-    """calculate the mean number of word per utterane; takes the sum of
+    """calculate the mean number of words per utterane; takes the sum of
      all words in all utterance over number of utterance"""
     utterances = sent_tokenize(script)
     # the number of sentences in this script
@@ -57,7 +57,7 @@ def mean_words_per_sentence(script):
 
     return utterances, mean, number_utterances
 
-
+# adding pos tag (nouns, adjectives, and verbs) for each words
 def add_pos_tag(script):
     """returns the respective percentage of nouns, adjectives, and verbs
     (among all nouns, adjectives, and verbs) in the one script"""
@@ -94,6 +94,7 @@ def data_split(X, y):
     train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.2, random_state = 42)
     return train_X, train_y, test_X, test_y, val_X, val_y
 
+# random forest classifier model 
 def random_forest(train_X, train_y, val_X, val_y):
     """
 
@@ -119,7 +120,7 @@ def random_forest(train_X, train_y, val_X, val_y):
     # print(forest_corr)
     return accuracy, forest_corr
 
-# linear regression
+# linear regression model
 def linear_model(train_X, train_y, val_X, val_y):
     """
 
@@ -138,6 +139,7 @@ def linear_model(train_X, train_y, val_X, val_y):
     correlation_linear, p_value = pearsonr(predicted_linear, val_y)
     # print(correlation_linear)
     return score_linear, correlation_linear
+
 
 
 def main(script_file):
@@ -279,9 +281,7 @@ def main(script_file):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process cleaned data file')
-
     parser.add_argument('-f', '--file', default='script_file.txt', help='cleaned datafile')
-
     args = parser.parse_args()
     main(args.file)
 
