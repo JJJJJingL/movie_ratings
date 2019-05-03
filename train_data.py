@@ -87,26 +87,6 @@ def data_split(X, y):
     train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.2, random_state = 42)
     train_X, val_X, train_y, val_y = train_test_split(train_X, train_y, test_size=0.2, random_state = 42)
     return train_X, train_y, test_X, test_y, val_X, val_y
-#
-#
-# train_X_tfidf_mean, test_X_tfidf_mean, train_y, test_y = train_test_split(X_tfidf_mean, y, test_size=0.2)
-# train_X_tfidf_mean, val_X_tfidf_mean, train_y, val_y = train_test_split(train_X_tfidf_mean, train_y, test_size=0.2)
-#
-# train_X_all, test_X_all, train_y, test_y = train_test_split(X_all, y, test_size=0.2)
-# train_X_all, val_X_all, train_y, val_y = train_test_split(train_X_all, train_y, test_size=0.2)
-#
-# train_X_pos, test_X_pos, train_y, test_y = train_test_split(X_pos, y, test_size=0.2)
-# train_X_pos, val_X_pos, train_y, val_y = train_test_split(train_X_pos, train_y, test_size=0.2)
-#
-# train_X_tfidf, test_X_tfidf, train_y, test_y = train_test_split(X_tfidf, y, test_size=0.2)
-# train_X_tfidf, val_X_tfidf, train_y, val_y = train_test_split(train_X_tfidf, train_y, test_size=0.2)
-#
-# train_X_mean, test_X_mean, train_y, test_y = train_test_split(X_mean, y, test_size=0.2)
-# train_X_mean, val_X_mean, train_y, val_y = train_test_split(train_X_mean, train_y, test_size=0.2)
-#
-#
-# train_X_base, test_X_base, train_y, test_y = train_test_split(X_base, y, test_size=0.2)
-# train_X_base, val_X_base, train_y, val_y = train_test_split(train_X_base, train_y, test_size=0.2)
 
 def random_forest(train_X, train_y, val_X, val_y):
     model = RandomForestRegressor(n_estimators=100, random_state=42)
@@ -119,9 +99,9 @@ def random_forest(train_X, train_y, val_X, val_y):
     mape = 100 * (error / val_y)
     # Calculate and display accuracy
     accuracy = 100 - np.mean(mape)
-    print('mean words + number of sentences accuracy:', round(accuracy, 5), '%.')
+    # print(f'mean words + number of sentences accuracy: {accuracy}')
     forest_corr, p_value = pearsonr(predicted, val_y)
-    print(forest_corr)
+    # print(forest_corr)
     return accuracy, forest_corr
 
 # linear regression
@@ -130,9 +110,9 @@ def linear_model(train_X, train_y, val_X, val_y):
     model_linear_mean.fit(train_X, train_y)
     predicted_linear = model_linear_mean.predict(val_X)
     score_linear = model_linear_mean.score(val_X, val_y)
-    print(score_linear)
+    # print(score_linear)
     correlation_linear, p_value = pearsonr(predicted_linear, val_y)
-    print(correlation_linear)
+    # print(correlation_linear)
     return score_linear, correlation_linear
 
 
@@ -223,6 +203,7 @@ def main(script_file):
     linear_corr_list = []
     forest_corr_list = []
 
+    # evaluate two models on validation data
     feature_matrices = [X_base, X_tfidf, X_tfidf_mean, X_mean, X_pos, X_all]
     for feature in feature_matrices:
         train_X, train_y, test_X, test_y, val_X, val_y = data_split(feature, y)
@@ -251,7 +232,7 @@ def main(script_file):
     forest_corr_test = []
     feature_matrices_test = [X_base, X_tfidf_mean]
     for f in feature_matrices_test:
-        train_X, train_y, test_X, test_y, val_X, val_y = data_split(feature, y)
+        train_X, train_y, test_X, test_y, val_X, val_y = data_split(f, y)
         linear_model_score, pearson_corr = linear_model(train_X, train_y, test_X, test_y)
         linear_score_test.append(linear_model_score)
         linear_corr_test.append(pearson_corr)
